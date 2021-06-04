@@ -9,21 +9,25 @@ app.get("/", (req,res) => {
 })
 
 app.get("/api/:date?", (req, res) => {
-  let finalObj = {}
-  if(req.params.date.includes("-")) {
+  let finalObj = {};
+  if(req.params.date === "") {
+    finalObj.unix = new Date().getTime();
+    finalObj.utc = new Date().toUTCString();
+  } else if(req.params.date.includes("-")) {
     const input = req.params.date;
-    finalObj.unix = new Date(input).getTime(),
-    finalObj.utc = new Date(input).toUTCString()
+    finalObj.unix = new Date(input).getTime();
+    finalObj.utc = new Date(input).toUTCString();
   } else {
-      const input = new Date(parseInt(req.params.date)).getTime();
-      const utcDate = new Date(input).toUTCString();
-      finalObj.unix = input,
-      finalObj.utc = utcDate
-    }
-
+    const input = new Date(parseInt(req.params.date)).getTime();
+    const utcDate = new Date(input).toUTCString();
+    finalObj.unix = input,
+    finalObj.utc = utcDate
+  }
+  
   if(!finalObj.unix) {
     res.json({ error : "Invalid Date" });
   }
+  console.log(finalObj);
   res.json(finalObj);
 });
 
