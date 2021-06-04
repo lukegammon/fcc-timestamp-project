@@ -4,20 +4,24 @@ require("dotenv").config();
 
 const cors = require("cors");
 
-app.get("/api/:date", (req, res) => {
+app.get("/", (req,res) => {
+  res.sendFile(__dirname + '/views/index.html');
+})
+
+app.get("/api/:date?", (req, res) => {
   if(req.params.date.includes("-")) {
-    [year, month, day] = req.params.date.split("-");
-    console.log(year,month,day);
-    const utcDate = new Date(year, month, day).toUTCString();
-    console.log(utcDate);
-    res.send({
-      unix: Date.parse(utcDate),
-      utc: utcDate
+    const input = req.params.date;
+    console.log(input);
+    res.json({
+      unix: new Date(input).getTime(),
+      utc: new Date(input).toUTCString()
     });
   } else {
-    const utcDate = new Date(parseInt(req.params.date)).toUTCString();
-    res.send( {
-      unix: req.params.date,
+    const input = new Date(parseInt(req.params.date)).getTime();
+    const utcDate = new Date(input).toUTCString();
+    console.log(utcDate); 
+    res.json( {
+      unix: input,
       utc: utcDate
     })
   }
